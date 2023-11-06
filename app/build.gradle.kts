@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("dev.shreyaspatil.compose-compiler-report-generator")
 }
 
 android {
