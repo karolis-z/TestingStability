@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.myapplication.ui.components.EthernetIcon
 import com.example.myapplication.ui.components.MyTopBar
@@ -60,7 +61,7 @@ fun SettingsDeviceListScreen(
     onDeviceClick: (locationId: String, deviceId: String, locationName: String) -> Unit,
     onConfigureNewHeartnwtworkClick: () -> Unit,
 ) {
-    val viewModel: SettingsDeviceListViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val viewModel: SettingsDeviceListViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val deviceListState by remember(uiState.isLoading, uiState.deviceList) {

@@ -81,4 +81,11 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("com.google.accompanist:accompanist-placeholder-material:0.23.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6")
+
+    val nav_version = "2.7.5"
+
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }
