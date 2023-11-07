@@ -33,12 +33,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -80,32 +79,12 @@ fun SettingsDeviceListScreen(
 //        )
 //    }
 
-    val devicesMutableList = remember {
-        mutableStateListOf<DeviceListItem>()
-    }
-
-    LaunchedEffect(uiState.deviceList) {
-        val deviceSet = devicesMutableList.associateBy { it.heartnetworkIdentifier }
-        uiState.deviceList.forEach { device ->
-            deviceSet[device.heartnetworkIdentifier]?.let { existingDevice ->
-                if (existingDevice != device) {
-                    val index = devicesMutableList.indexOf(existingDevice)
-                    devicesMutableList[index] =
-                        existingDevice.copy(networkConfiguration = device.networkConfiguration)
-                }
-            } ?: devicesMutableList.add(device)
-        }
-        devicesMutableList.removeAll { deviceInMutableList ->
-            uiState.deviceList.none { it.heartnetworkIdentifier == deviceInMutableList.heartnetworkIdentifier }
-        }
-    }
-
-    val deviceListState by remember(uiState.isLoading, devicesMutableList.toList()) {
+    val deviceListState by remember(uiState.isLoading, uiState.deviceList) {
         mutableStateOf(
             when {
                 uiState.isLoading -> DeviceListState.Loading
-                devicesMutableList.isEmpty() -> DeviceListState.EmptyList
-                else -> DeviceListState.LoadedList(devicesMutableList)
+                uiState.deviceList.isEmpty() -> DeviceListState.EmptyList
+                else -> DeviceListState.LoadedList(uiState.deviceList)
             }
         )
     }
@@ -132,8 +111,7 @@ fun SettingsDeviceListScreen(
 private sealed class DeviceListState {
     object Loading : DeviceListState()
     object EmptyList : DeviceListState()
-    //    @Immutable
-    data class LoadedList(val list: SnapshotStateList<DeviceListItem>) : DeviceListState()
+    data class LoadedList(val list: List<DeviceListItem>) : DeviceListState()
 //    data class LoadedList(val list: SnapshotStateList<DeviceListItem>) : DeviceListState()
 //    data class LoadedList(val list: ImmutableList<DeviceListItem>) : DeviceListState()
 }
@@ -258,7 +236,7 @@ private fun DevicesList(
             locationName = "",
             networkConfiguration = NetworkState.Loading
         )
-        mutableStateListOf(placeHolderDevice, placeHolderDevice, placeHolderDevice)
+        listOf(placeHolderDevice, placeHolderDevice, placeHolderDevice)
     }
 
     Crossfade(
