@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -33,8 +32,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,7 +54,6 @@ import com.example.myapplication.usecases.GetNetworkStatusForDevicesUseCase.*
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
-import kotlin.random.Random
 
 @Composable
 fun SettingsDeviceListScreen(
@@ -67,22 +63,12 @@ fun SettingsDeviceListScreen(
 ) {
     val viewModel: SettingsDeviceListViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-//
-//    val deviceListState by remember(uiState.isLoading, uiState.deviceList) {
-//        mutableStateOf(
-//            when {
-//                uiState.isLoading -> DeviceListState.Loading
-////                uiState.deviceList.isEmpty() -> DeviceListState.EmptyList
-//                uiState.deviceList.isEmpty() -> DeviceListState.EmptyList
-//                else -> DeviceListState.LoadedList(uiState.deviceList)
-//            }
-//        )
-//    }
 
     val deviceListState by remember(uiState.isLoading, uiState.deviceList) {
         mutableStateOf(
             when {
                 uiState.isLoading -> DeviceListState.Loading
+//                uiState.deviceList.isEmpty() -> DeviceListState.EmptyList
                 uiState.deviceList.isEmpty() -> DeviceListState.EmptyList
                 else -> DeviceListState.LoadedList(uiState.deviceList)
             }
@@ -90,9 +76,6 @@ fun SettingsDeviceListScreen(
     }
 
     SettingsDeviceListScreen(
-//        isLoading = uiState.isLoading,
-//        devices = uiState.deviceList,
-//        devices = devicesMutableList,
         deviceListState = deviceListState,
 //        error = uiState.error,
         onBackClick = onBackClick,
@@ -111,9 +94,10 @@ fun SettingsDeviceListScreen(
 private sealed class DeviceListState {
     object Loading : DeviceListState()
     object EmptyList : DeviceListState()
-    data class LoadedList(val list: List<DeviceListItem>) : DeviceListState()
+    //    @Immutable
+//    data class LoadedList(val list: List<DeviceListItem>) : DeviceListState()
 //    data class LoadedList(val list: SnapshotStateList<DeviceListItem>) : DeviceListState()
-//    data class LoadedList(val list: ImmutableList<DeviceListItem>) : DeviceListState()
+    data class LoadedList(val list: List<DeviceListItem>) : DeviceListState()
 }
 
 private object HeartnetworkSettingsDeviceListScreenTokens {
@@ -133,9 +117,6 @@ private object HeartnetworkSettingsDeviceListScreenTokens {
 
 @Composable
 private fun SettingsDeviceListScreen(
-//    isLoading: Boolean,
-//    devices: List<DeviceListItem>,
-//    devices: SnapshotStateList<DeviceListItem>,
     deviceListState: DeviceListState,
 //    error: Throwable?,
     onBackClick: () -> Unit,
@@ -186,8 +167,6 @@ private fun SettingsDeviceListScreen(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 DevicesList(
-//                    isLoading = isLoading,
-//                    devices = devices,
                     deviceListState = deviceListState,
                     onDeviceClick = onDeviceClick,
                 )
@@ -223,9 +202,6 @@ private object DevicesListTokens {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun DevicesList(
-//    isLoading: Boolean,
-//    devices: List<DeviceListItem>,
-//    devices: SnapshotStateList<DeviceListItem>,
     deviceListState: DeviceListState,
     onDeviceClick: (DeviceListItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -260,7 +236,7 @@ private fun DevicesList(
                     )
                 }
             }
-            DeviceListState.EmptyList -> DeviceListContainer(content = {})
+            DeviceListState.EmptyList ->  DeviceListContainer(content = {})
             is DeviceListState.LoadedList -> DeviceListContainer {
                 items(
                     key = { it.heartnetworkIdentifier.deviceId + it.heartnetworkIdentifier.locationId },
