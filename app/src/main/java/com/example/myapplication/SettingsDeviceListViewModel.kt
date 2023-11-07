@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.ui.theme.Location
@@ -29,6 +30,19 @@ class SettingsDeviceListViewModel @Inject constructor(
     getLocationsWithHeartnetworkDevicesOnlyUseCase: GetLocationsWithHeartnetworkDevicesOnlyUseCase,
     getNetworkStatusUseCase: GetNetworkStatusForDevicesUseCase,
 ) : ViewModel() {
+
+    val additionalItem = Pair(
+        HeartnetworkIdentifier("locationId4", "deviceId4"),
+        DeviceListItem(
+            heartnetworkIdentifier = HeartnetworkIdentifier(
+                locationId = "locationId4",
+                deviceId = "deviceId4"
+            ),
+            locationName = "Location4",
+            networkConfiguration = NetworkState.Wifi(100),
+        )
+    )
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private val deviceList: Flow<Result<List<DeviceListItem>>> =
         getLocationsWithHeartnetworkDevicesOnlyUseCase()
@@ -46,7 +60,15 @@ class SettingsDeviceListViewModel @Inject constructor(
                         }
                         .merge()
                         .runningFold(emptyMap<HeartnetworkIdentifier, DeviceListItem>()) { devices, item ->
-                            devices + mapOf(item)
+                            val countLoading = devices.count { it.value.networkConfiguration is NetworkState.Loading }
+                            Log.d("TESTING", "countofLoading items $countLoading. item to add = $item. devices = $devices");
+                            if (countLoading == 1 && devices.size == 2) {
+                                devices + mapOf(item) + mapOf(additionalItem)
+                            } else if (countLoading == 2 && devices.size == 3) {
+                                devices.filterNot { it.value.heartnetworkIdentifier.deviceId == "device1" } + mapOf(item)
+                            } else {
+                                devices + mapOf(item)
+                            }
                         }
                         .map { it.values.toList() }
                 )
