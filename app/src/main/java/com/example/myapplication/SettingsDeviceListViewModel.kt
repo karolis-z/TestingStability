@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.ui.theme.Location
@@ -118,7 +119,7 @@ data class HeartnetworkSettingsDeviceListUiState(
 }
 
 //@Immutable
-//data class Devices(val list: List<DeviceListItem>)
+//data class Devices(val list: List<DeviceListI tem>)
 
 //@Immutable
 data class DeviceListItem(
@@ -127,6 +128,7 @@ data class DeviceListItem(
     val networkConfiguration: NetworkState = NetworkState.Loading,
 )
 
+@Immutable
 class LocationName(var value: String)
 
 //@Immutable
