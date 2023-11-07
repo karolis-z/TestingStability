@@ -40,7 +40,8 @@ class SettingsDeviceListViewModel @Inject constructor(
                 emitAll(
                     locations.toDeviceListItem()
                         .map { device ->
-                            getNetworkStatusUseCase(device.heartnetworkIdentifier)
+                            val delay = device.heartnetworkIdentifier.deviceId.takeLast(1).toIntOrNull()
+                            getNetworkStatusUseCase(device.heartnetworkIdentifier, delay?.times(2) ?: 2)
                                 .asResult()
                                 .map(::mapNetworkConfigurationResultToNetworkState)
                                 .map {
