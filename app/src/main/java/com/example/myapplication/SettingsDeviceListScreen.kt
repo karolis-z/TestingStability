@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -32,9 +33,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -76,9 +80,40 @@ fun SettingsDeviceListScreen(
 //        )
 //    }
 
+    val devicesMutableList = remember {
+        mutableStateListOf<DeviceListItem>()
+    }
+
+    LaunchedEffect(uiState.deviceList) {
+        val deviceSet = devicesMutableList.associateBy { it.heartnetworkIdentifier }
+        uiState.deviceList.forEach { device ->
+            deviceSet[device.heartnetworkIdentifier]?.let { existingDevice ->
+                if (existingDevice != device) {
+                    val index = devicesMutableList.indexOf(existingDevice)
+                    devicesMutableList[index] =
+                        existingDevice.copy(networkConfiguration = device.networkConfiguration)
+                }
+            } ?: devicesMutableList.add(device)
+        }
+        devicesMutableList.removeAll { deviceInMutableList ->
+            uiState.deviceList.none { it.heartnetworkIdentifier == deviceInMutableList.heartnetworkIdentifier }
+        }
+    }
+
+//    val deviceListState by remember(uiState.isLoading, devicesMutableList.toList()) {
+//        mutableStateOf(
+//            when {
+//                uiState.isLoading -> DeviceListState.Loading
+//                devicesMutableList.isEmpty() -> DeviceListState.EmptyList
+//                else -> DeviceListState.LoadedList(devicesMutableList)
+//            }
+//        )
+//    }
+
     SettingsDeviceListScreen(
         isLoading = uiState.isLoading,
-        devices = uiState.deviceList,
+//        devices = uiState.deviceList,
+        devices = devicesMutableList,
 //        deviceListState = deviceListState,
 //        error = uiState.error,
         onBackClick = onBackClick,
@@ -121,7 +156,8 @@ private object HeartnetworkSettingsDeviceListScreenTokens {
 @Composable
 private fun SettingsDeviceListScreen(
     isLoading: Boolean,
-    devices: List<DeviceListItem>,
+//    devices: List<DeviceListItem>,
+    devices: SnapshotStateList<DeviceListItem>,
 //    deviceListState: DeviceListState,
 //    error: Throwable?,
     onBackClick: () -> Unit,
@@ -210,7 +246,8 @@ private object DevicesListTokens {
 @Composable
 private fun DevicesList(
     isLoading: Boolean,
-    devices: List<DeviceListItem>,
+//    devices: List<DeviceListItem>,
+    devices: SnapshotStateList<DeviceListItem>,
 //    deviceListState: DeviceListState,
     onDeviceClick: (DeviceListItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -221,7 +258,7 @@ private fun DevicesList(
             locationName = "",
             networkConfiguration = NetworkState.Loading
         )
-        listOf(placeHolderDevice, placeHolderDevice, placeHolderDevice)
+        mutableStateListOf(placeHolderDevice, placeHolderDevice, placeHolderDevice)
     }
 
     Crossfade(
