@@ -54,8 +54,6 @@ import com.example.myapplication.usecases.GetNetworkStatusForDevicesUseCase.*
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun SettingsDeviceListScreen(
@@ -99,9 +97,9 @@ private sealed class DeviceListState {
     object Loading : DeviceListState()
     object EmptyList : DeviceListState()
     //    @Immutable
-//    data class LoadedList(val list: List<DeviceListItem>) : DeviceListState()
+    data class LoadedList(val list: List<DeviceListItem>) : DeviceListState()
 //    data class LoadedList(val list: SnapshotStateList<DeviceListItem>) : DeviceListState()
-    data class LoadedList(val list: ImmutableList<DeviceListItem>) : DeviceListState()
+//    data class LoadedList(val list: ImmutableList<DeviceListItem>) : DeviceListState()
 }
 
 private object HeartnetworkSettingsDeviceListScreenTokens {
@@ -122,7 +120,7 @@ private object HeartnetworkSettingsDeviceListScreenTokens {
 @Composable
 private fun SettingsDeviceListScreen(
     isLoading: Boolean,
-    devices: ImmutableList<DeviceListItem>,
+    devices: List<DeviceListItem>,
 //    deviceListState: DeviceListState,
 //    error: Throwable?,
     onBackClick: () -> Unit,
@@ -211,7 +209,7 @@ private object DevicesListTokens {
 @Composable
 private fun DevicesList(
     isLoading: Boolean,
-    devices: ImmutableList<DeviceListItem>,
+    devices: List<DeviceListItem>,
 //    deviceListState: DeviceListState,
     onDeviceClick: (DeviceListItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -222,7 +220,7 @@ private fun DevicesList(
             locationName = "",
             networkConfiguration = NetworkState.Loading
         )
-        persistentListOf(placeHolderDevice, placeHolderDevice, placeHolderDevice)
+        listOf(placeHolderDevice, placeHolderDevice, placeHolderDevice)
     }
 
     Crossfade(
