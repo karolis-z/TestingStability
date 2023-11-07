@@ -54,6 +54,7 @@ import com.example.myapplication.usecases.GetNetworkStatusForDevicesUseCase.*
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
+import kotlin.random.Random
 
 @Composable
 fun SettingsDeviceListScreen(
@@ -299,8 +300,8 @@ private fun DeviceComponent(
     Card(
         shape = DeviceComponentTokens.shape,
         colors = CardDefaults.cardColors(
-            containerColor = DeviceComponentTokens.backgroundColor,
-//            containerColor = Color(Random.nextInt()),
+//            containerColor = DeviceComponentTokens.backgroundColor,
+            containerColor = Color(Random.nextInt()),
         ),
         modifier = modifier
             .fillMaxWidth()
