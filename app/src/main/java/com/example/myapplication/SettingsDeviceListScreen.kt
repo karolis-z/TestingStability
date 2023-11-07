@@ -300,8 +300,8 @@ private fun DeviceComponent(
     Card(
         shape = DeviceComponentTokens.shape,
         colors = CardDefaults.cardColors(
-//            containerColor = DeviceComponentTokens.backgroundColor,
-            containerColor = Color(Random.nextInt()),
+            containerColor = DeviceComponentTokens.backgroundColor,
+//            containerColor = Color(Random.nextInt()),
         ),
         modifier = modifier
             .fillMaxWidth()
