@@ -88,7 +88,8 @@ fun SettingsDeviceListScreen(
             onDeviceClick(
                 device.heartnetworkIdentifier.locationId,
                 device.heartnetworkIdentifier.deviceId,
-                device.locationName,
+//                device.locationName,
+                device.locationName.value,
             )
         },
         onConfigureNewHeartnetworkClick = onConfigureNewHeartnwtworkClick,
@@ -219,7 +220,7 @@ private fun DevicesList(
     val placeholderDevices = remember {
         val placeHolderDevice = DeviceListItem(
             heartnetworkIdentifier = HeartnetworkIdentifier("", ""),
-            locationName = "",
+            locationName = LocationName(""),
             networkConfiguration = NetworkState.Loading
         )
         persistentListOf(placeHolderDevice, placeHolderDevice, placeHolderDevice)
@@ -327,7 +328,8 @@ private fun DeviceComponent(
         ) {
             Column {
                 Text(
-                    text = stringResource(id = R.string.heartnetwork_deviceList_cell_title) + " " + device.locationName,
+//                    text = stringResource(id = R.string.heartnetwork_deviceList_cell_title) + " " + device.locationName,
+                    text = stringResource(id = R.string.heartnetwork_deviceList_cell_title) + " " + device.locationName.value,
                     style = DeviceComponentTokens.textStyle,
                     color = DeviceComponentTokens.deviceNameColor,
                     overflow = TextOverflow.Ellipsis,

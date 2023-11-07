@@ -82,7 +82,8 @@ class SettingsDeviceListViewModel @Inject constructor(
                         location.id.id,
                         device.id,
                     ),
-                    locationName = location.name,
+//                    locationName = location.name,
+                    locationName = LocationName(location.name),
                 )
             }
         }.toImmutableList()
@@ -126,9 +127,11 @@ data class HeartnetworkSettingsDeviceListUiState(
 //@Immutable
 data class DeviceListItem(
     val heartnetworkIdentifier: HeartnetworkIdentifier,
-    val locationName: String,
+    val locationName: LocationName,
     val networkConfiguration: NetworkState = NetworkState.Loading,
 )
+
+class LocationName(var value: String)
 
 //@Immutable
 sealed class NetworkState {
