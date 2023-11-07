@@ -8,6 +8,10 @@ import com.example.myapplication.usecases.GetNetworkStatusForDevicesUseCase
 import com.example.myapplication.usecases.GetNetworkStatusForDevicesUseCase.HeartnetworkIdentifier
 import com.example.myapplication.usecases.NetworkConfiguration
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.immutableListOf
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,7 +34,7 @@ class SettingsDeviceListViewModel @Inject constructor(
     getNetworkStatusUseCase: GetNetworkStatusForDevicesUseCase,
 ) : ViewModel() {
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val deviceList: Flow<Result<List<DeviceListItem>>> =
+    private val deviceList: Flow<Result<ImmutableList<DeviceListItem>>> =
         getLocationsWithHeartnetworkDevicesOnlyUseCase()
             .transformLatest { locations ->
                 emitAll(
@@ -47,7 +51,7 @@ class SettingsDeviceListViewModel @Inject constructor(
                         .runningFold(emptyMap<HeartnetworkIdentifier, DeviceListItem>()) { devices, item ->
                             devices + mapOf(item)
                         }
-                        .map { it.values.toList() }
+                        .map { it.values.toImmutableList() }
                 )
             }
             .asResult()
@@ -63,14 +67,14 @@ class SettingsDeviceListViewModel @Inject constructor(
         initialValue = HeartnetworkSettingsDeviceListUiState()
     ) { deviceList ->
         HeartnetworkSettingsDeviceListUiState(
-            deviceList = (deviceList as? Result.Success)?.value ?: emptyList(),
+            deviceList = (deviceList as? Result.Success)?.value ?: persistentListOf(),
             isLoading = deviceList is Result.Loading,
 //            error = error,
         )
     }
 
-    private fun List<Location>.toDeviceListItem(): List<DeviceListItem> {
-        return this.flatMap { location ->
+    private fun List<Location>.toDeviceListItem(): ImmutableList<DeviceListItem> {
+        val x = this.flatMap { location ->
             location.devices.map { device ->
                 DeviceListItem(
                     heartnetworkIdentifier = HeartnetworkIdentifier(
@@ -80,7 +84,8 @@ class SettingsDeviceListViewModel @Inject constructor(
                     locationName = location.name,
                 )
             }
-        }
+        }.toImmutableList()
+        return x
     }
 
     private fun mapNetworkConfigurationResultToNetworkState(
@@ -106,7 +111,7 @@ class SettingsDeviceListViewModel @Inject constructor(
 
 
 data class HeartnetworkSettingsDeviceListUiState(
-    val deviceList: List<DeviceListItem> = emptyList(),
+    val deviceList: ImmutableList<DeviceListItem> = persistentListOf(),
 //    val deviceList: Devices = Devices(emptyList()),
     val isLoading: Boolean = false,
 //    val error: Throwable? = null

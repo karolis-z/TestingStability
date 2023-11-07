@@ -54,6 +54,8 @@ import com.example.myapplication.usecases.GetNetworkStatusForDevicesUseCase.*
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun SettingsDeviceListScreen(
@@ -97,7 +99,7 @@ private sealed class DeviceListState {
     //    @Immutable
 //    data class LoadedList(val list: List<DeviceListItem>) : DeviceListState()
 //    data class LoadedList(val list: SnapshotStateList<DeviceListItem>) : DeviceListState()
-    data class LoadedList(val list: List<DeviceListItem>) : DeviceListState()
+    data class LoadedList(val list: ImmutableList<DeviceListItem>) : DeviceListState()
 }
 
 private object HeartnetworkSettingsDeviceListScreenTokens {
@@ -212,7 +214,7 @@ private fun DevicesList(
             locationName = "",
             networkConfiguration = NetworkState.Loading
         )
-        listOf(placeHolderDevice, placeHolderDevice, placeHolderDevice)
+        persistentListOf(placeHolderDevice, placeHolderDevice, placeHolderDevice)
     }
 
     Crossfade(
