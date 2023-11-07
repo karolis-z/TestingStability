@@ -83,7 +83,7 @@ val device2 = Device(
 
 )
 val device3 = Device(
-    id = "device1",
+    id = "device3",
     name = "Heartnetwork3",
     type = DeviceType.ELECTRICITY,
     unit = DeviceUnit.KWH,

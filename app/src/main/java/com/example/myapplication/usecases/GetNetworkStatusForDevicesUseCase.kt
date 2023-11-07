@@ -10,9 +10,10 @@ import kotlin.random.Random
 class GetNetworkStatusForDevicesUseCase @Inject constructor(){
     operator fun invoke(
         identifier: HeartnetworkIdentifier,
+        delayInSeconds: Int,
     ): Flow<NetworkConfiguration> {
         return flow {
-            val delayLength = Random.nextInt(1,6).times(1000).toLong()
+            val delayLength = delayInSeconds.times(1000).toLong()
             delay(delayLength)
             val result = Random.nextInt(1, 4)
             emit(
