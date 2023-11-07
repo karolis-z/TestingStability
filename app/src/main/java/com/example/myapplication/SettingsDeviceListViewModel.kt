@@ -71,7 +71,7 @@ class SettingsDeviceListViewModel @Inject constructor(
     }
 
     private fun List<Location>.toDeviceListItem(): List<DeviceListItem> {
-        return this.flatMap { location ->
+        val x = this.flatMap { location ->
             location.devices.map { device ->
                 DeviceListItem(
                     heartnetworkIdentifier = HeartnetworkIdentifier(
@@ -82,6 +82,7 @@ class SettingsDeviceListViewModel @Inject constructor(
                 )
             }
         }
+        return x
     }
 
     private fun mapNetworkConfigurationResultToNetworkState(
