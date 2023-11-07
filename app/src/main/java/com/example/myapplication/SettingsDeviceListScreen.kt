@@ -100,21 +100,21 @@ fun SettingsDeviceListScreen(
         }
     }
 
-//    val deviceListState by remember(uiState.isLoading, devicesMutableList.toList()) {
-//        mutableStateOf(
-//            when {
-//                uiState.isLoading -> DeviceListState.Loading
-//                devicesMutableList.isEmpty() -> DeviceListState.EmptyList
-//                else -> DeviceListState.LoadedList(devicesMutableList)
-//            }
-//        )
-//    }
+    val deviceListState by remember(uiState.isLoading, devicesMutableList.toList()) {
+        mutableStateOf(
+            when {
+                uiState.isLoading -> DeviceListState.Loading
+                devicesMutableList.isEmpty() -> DeviceListState.EmptyList
+                else -> DeviceListState.LoadedList(devicesMutableList)
+            }
+        )
+    }
 
     SettingsDeviceListScreen(
-        isLoading = uiState.isLoading,
+//        isLoading = uiState.isLoading,
 //        devices = uiState.deviceList,
-        devices = devicesMutableList,
-//        deviceListState = deviceListState,
+//        devices = devicesMutableList,
+        deviceListState = deviceListState,
 //        error = uiState.error,
         onBackClick = onBackClick,
 //        onErrorShown = viewModel.error::clear,
@@ -133,7 +133,7 @@ private sealed class DeviceListState {
     object Loading : DeviceListState()
     object EmptyList : DeviceListState()
     //    @Immutable
-    data class LoadedList(val list: List<DeviceListItem>) : DeviceListState()
+    data class LoadedList(val list: SnapshotStateList<DeviceListItem>) : DeviceListState()
 //    data class LoadedList(val list: SnapshotStateList<DeviceListItem>) : DeviceListState()
 //    data class LoadedList(val list: ImmutableList<DeviceListItem>) : DeviceListState()
 }
@@ -155,10 +155,10 @@ private object HeartnetworkSettingsDeviceListScreenTokens {
 
 @Composable
 private fun SettingsDeviceListScreen(
-    isLoading: Boolean,
+//    isLoading: Boolean,
 //    devices: List<DeviceListItem>,
-    devices: SnapshotStateList<DeviceListItem>,
-//    deviceListState: DeviceListState,
+//    devices: SnapshotStateList<DeviceListItem>,
+    deviceListState: DeviceListState,
 //    error: Throwable?,
     onBackClick: () -> Unit,
 //    onErrorShown: () -> Unit,
@@ -208,9 +208,9 @@ private fun SettingsDeviceListScreen(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 DevicesList(
-                    isLoading = isLoading,
-                    devices = devices,
-//                    deviceListState = deviceListState,
+//                    isLoading = isLoading,
+//                    devices = devices,
+                    deviceListState = deviceListState,
                     onDeviceClick = onDeviceClick,
                 )
 
@@ -245,10 +245,10 @@ private object DevicesListTokens {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun DevicesList(
-    isLoading: Boolean,
+//    isLoading: Boolean,
 //    devices: List<DeviceListItem>,
-    devices: SnapshotStateList<DeviceListItem>,
-//    deviceListState: DeviceListState,
+//    devices: SnapshotStateList<DeviceListItem>,
+    deviceListState: DeviceListState,
     onDeviceClick: (DeviceListItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -262,12 +262,12 @@ private fun DevicesList(
     }
 
     Crossfade(
-        targetState = isLoading,
+        targetState = deviceListState,
         modifier = modifier.animateContentSize(),
         label = "Device List Loading/Not Loading Crossfade",
-    ) { loading ->
-        when (loading) {
-            true -> DeviceListContainer {
+    ) { state ->
+        when (state) {
+            DeviceListState.Loading -> DeviceListContainer {
                 items(items = placeholderDevices) { device ->
                     DeviceComponent(
                         onDeviceClick = {},
@@ -282,11 +282,11 @@ private fun DevicesList(
                     )
                 }
             }
-//            DeviceListState.EmptyList ->  DeviceListContainer(content = {})
-            false -> DeviceListContainer {
+            DeviceListState.EmptyList -> DeviceListContainer(content = {})
+            is DeviceListState.LoadedList -> DeviceListContainer {
                 items(
                     key = { it.heartnetworkIdentifier.deviceId + it.heartnetworkIdentifier.locationId },
-                    items = devices,
+                    items = state.list,
                     itemContent = { device ->
                         Box(modifier = Modifier.animateItemPlacement()) {
                             DeviceComponent(
