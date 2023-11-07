@@ -121,7 +121,8 @@ private object HeartnetworkSettingsDeviceListScreenTokens {
 @Composable
 private fun SettingsDeviceListScreen(
     isLoading: Boolean,
-    devices: List<DeviceListItem>,
+//    devices: List<DeviceListItem>,
+    devices: Devices,
 //    deviceListState: DeviceListState,
 //    error: Throwable?,
     onBackClick: () -> Unit,
@@ -210,7 +211,8 @@ private object DevicesListTokens {
 @Composable
 private fun DevicesList(
     isLoading: Boolean,
-    devices: List<DeviceListItem>,
+//    devices: List<DeviceListItem>,
+    devices: Devices,
 //    deviceListState: DeviceListState,
     onDeviceClick: (DeviceListItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -249,7 +251,7 @@ private fun DevicesList(
             false -> DeviceListContainer {
                 items(
                     key = { it.heartnetworkIdentifier.deviceId + it.heartnetworkIdentifier.locationId },
-                    items = devices,
+                    items = devices.list,
                     itemContent = { device ->
                         Box(modifier = Modifier.animateItemPlacement()) {
                             DeviceComponent(

@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.ui.theme.Location
@@ -64,7 +65,7 @@ class SettingsDeviceListViewModel @Inject constructor(
         initialValue = HeartnetworkSettingsDeviceListUiState()
     ) { deviceList ->
         HeartnetworkSettingsDeviceListUiState(
-            deviceList = (deviceList as? Result.Success)?.value ?: emptyList(),
+            deviceList = Devices((deviceList as? Result.Success)?.value ?: emptyList()),
             isLoading = deviceList is Result.Loading,
 //            error = error,
         )
@@ -108,16 +109,16 @@ class SettingsDeviceListViewModel @Inject constructor(
 
 
 data class HeartnetworkSettingsDeviceListUiState(
-    val deviceList: List<DeviceListItem> = emptyList(),
-//    val deviceList: Devices = Devices(emptyList()),
+//    val deviceList: List<DeviceListItem> = emptyList(),
+    val deviceList: Devices = Devices(emptyList()),
     val isLoading: Boolean = false,
 //    val error: Throwable? = null
 ) {
 
 }
 
-//@Immutable
-//data class Devices(val list: List<DeviceListItem>)
+@Immutable
+data class Devices(val list: List<DeviceListItem>)
 
 //@Immutable
 data class DeviceListItem(
