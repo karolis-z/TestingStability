@@ -8,7 +8,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -20,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -44,7 +47,8 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("starting") {
                             StartingScreen(
-                                gotoList = { navController.navigate("listscreen") }
+                                gotoList = { navController.navigate("listscreen") },
+                                goToPager = { navController.navigate("pager") },
                             )
                         }
                         composable("listscreen") {
@@ -54,6 +58,11 @@ class MainActivity : ComponentActivity() {
                                     sendToast(this@MainActivity, locationId, deviceId, locationName)
                                 },
                                 onConfigureNewHeartnwtworkClick = {},
+                            )
+                        }
+                        composable("pager") {
+                            PagerScreen(
+                                onBackClick = { navController.popBackStack() },
                             )
                         }
                     }
@@ -66,6 +75,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun StartingScreen(
     gotoList: () -> Unit,
+    goToPager: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -75,6 +85,10 @@ fun StartingScreen(
     ) {
         Button(onClick = gotoList) {
             Text(text = "Go to list", style = MaterialTheme.typography.bodyLarge)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = goToPager) {
+            Text(text = "Go to Pager", style = MaterialTheme.typography.bodyLarge)
         }
     }
 }
