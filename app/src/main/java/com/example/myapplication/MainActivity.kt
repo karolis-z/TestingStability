@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.screens.PagerScreen
+import com.example.myapplication.screens.SettingsDeviceListScreen
+import com.example.myapplication.screens.performanepage.PerformancePageScreen
+import com.example.myapplication.screens.performanepage.PerformancePageScreen2
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,6 +54,8 @@ class MainActivity : ComponentActivity() {
                             StartingScreen(
                                 gotoList = { navController.navigate("listscreen") },
                                 goToPager = { navController.navigate("pager") },
+                                goToPerformancePage = { navController.navigate("performance") },
+                                goToPerformancePage2 = { navController.navigate("performance2") },
                             )
                         }
                         composable("listscreen") {
@@ -65,6 +72,18 @@ class MainActivity : ComponentActivity() {
                                 onBackClick = { navController.popBackStack() },
                             )
                         }
+                        composable("performance") {
+                            BackHandler {
+                                navController.popBackStack()
+                            }
+                            PerformancePageScreen()
+                        }
+                        composable("performance2") {
+                            BackHandler {
+                                navController.popBackStack()
+                            }
+                            PerformancePageScreen2()
+                        }
                     }
                 }
             }
@@ -76,6 +95,8 @@ class MainActivity : ComponentActivity() {
 fun StartingScreen(
     gotoList: () -> Unit,
     goToPager: () -> Unit,
+    goToPerformancePage: () -> Unit,
+    goToPerformancePage2: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -89,6 +110,14 @@ fun StartingScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = goToPager) {
             Text(text = "Go to Pager", style = MaterialTheme.typography.bodyLarge)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = goToPerformancePage) {
+            Text(text = "Go to Performance", style = MaterialTheme.typography.bodyLarge)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = goToPerformancePage2) {
+            Text(text = "Go to Performance 2", style = MaterialTheme.typography.bodyLarge)
         }
     }
 }

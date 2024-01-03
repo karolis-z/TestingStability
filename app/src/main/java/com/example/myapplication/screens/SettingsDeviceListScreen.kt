@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.screens
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
@@ -33,7 +33,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.myapplication.R
 import com.example.myapplication.ui.components.EthernetIcon
 import com.example.myapplication.ui.components.MyTopBar
 import com.example.myapplication.ui.components.WifiIcon
@@ -54,7 +54,6 @@ import com.example.myapplication.usecases.GetNetworkStatusForDevicesUseCase.*
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
-import kotlin.random.Random
 
 @Composable
 fun SettingsDeviceListScreen(

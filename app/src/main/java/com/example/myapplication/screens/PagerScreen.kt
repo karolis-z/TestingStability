@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.screens
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
@@ -32,10 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import kotlin.math.roundToInt
-import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable

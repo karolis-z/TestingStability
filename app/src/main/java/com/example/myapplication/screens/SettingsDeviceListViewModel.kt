@@ -1,7 +1,9 @@
-package com.example.myapplication
+package com.example.myapplication.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.Result
+import com.example.myapplication.asResult
 import com.example.myapplication.ui.theme.Location
 import com.example.myapplication.usecases.GetLocationsWithHeartnetworkDevicesOnlyUseCase
 import com.example.myapplication.usecases.GetNetworkStatusForDevicesUseCase
